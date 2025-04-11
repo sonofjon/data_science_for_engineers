@@ -6,6 +6,16 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
+def determine_symmetric_limit(x, y):
+    """Determine symmetric axis limits that end on the nearest even tick number."""
+    max_val = max(np.max(np.abs(x)), np.max(np.abs(y)))
+    # Round up to next whole number
+    lim = np.ceil(max_val)
+    # If the result is odd, add one to make it even
+    if lim % 2 != 0:
+        lim += 1
+    return lim
+
 # Define work directory and ensure it exists
 work_dir = "/Users/andreas/Dropbox/Documents/Education/Data Science for Engineers/Assignment 2"
 os.makedirs(work_dir, exist_ok=True)
@@ -49,8 +59,6 @@ print(f"Boxplot saved to: {boxplot_pdf_path}")
 pca = PCA(n_components=2)
 pca_scores = pca.fit_transform(normalized_data)
 
-# Determine symmetrical limits for score plot
-score_lim = np.max(np.abs(pca_scores))
 # ----- Create and Save PCA Score Plot (PC1 vs. PC2) -----
 plt.figure(figsize=(8, 6))
 plt.scatter(pca_scores[:, 0], pca_scores[:, 1], alpha=0.7, edgecolor='k')
@@ -58,8 +66,12 @@ plt.xlabel(f"PC1 ({pca.explained_variance_ratio_[0]*100:.1f}% var)")
 plt.ylabel(f"PC2 ({pca.explained_variance_ratio_[1]*100:.1f}% var)")
 plt.title("PCA Score Plot")
 plt.grid(True)
-plt.xlim(-score_lim, score_lim)
-plt.ylim(-score_lim, score_lim)
+
+# Determine symmetric limits for score plot
+limit_score = determine_symmetric_limit(pca_scores[:, 0], pca_scores[:, 1])
+plt.xlim(-limit_score, limit_score)
+plt.ylim(-limit_score, limit_score)
+
 plt.tight_layout()
 plt.savefig(score_pdf_path, format="pdf")
 plt.close()
@@ -67,18 +79,20 @@ print(f"PCA score plot saved to: {score_pdf_path}")
 
 # ----- Create and Save PCA Loading Plot -----
 loadings = pca.components_.T  # shape: (n_features, n_components)
-# Determine symmetrical limits for loading plot
-loading_lim = np.max(np.abs(loadings))
 plt.figure(figsize=(8, 6))
 plt.scatter(loadings[:, 0], loadings[:, 1], s=100, color='red')
 for i, feature in enumerate(numeric_cols):
-    plt.text(loadings[i, 0]*1.05, loadings[i, 1]*1.05, feature, fontsize=9)
+    plt.text(loadings[i, 0] * 1.05, loadings[i, 1] * 1.05, feature, fontsize=9)
 plt.xlabel("PC1 loading")
 plt.ylabel("PC2 loading")
 plt.title("PCA Loading Plot")
 plt.grid(True)
-plt.xlim(-loading_lim, loading_lim)
-plt.ylim(-loading_lim, loading_lim)
+
+# Determine symmetric limits for loading plot
+limit_loading = determine_symmetric_limit(loadings[:, 0], loadings[:, 1])
+plt.xlim(-limit_loading, limit_loading)
+plt.ylim(-limit_loading, limit_loading)
+
 plt.tight_layout()
 plt.savefig(loading_pdf_path, format="pdf")
 plt.close()

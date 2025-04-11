@@ -24,17 +24,17 @@ print(df.isnull().sum())
 # Identify numeric columns (exclude non-numeric, e.g., 'Car_name')
 numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
 
-# Impute missing numeric data with the median value (avoiding chained assignment)
-for col in numeric_cols:
-    df[col] = df[col].fillna(df[col].median())
+# Impute missing numeric data with the median value
+# for col in numeric_cols:
+#     df[col] = df[col].fillna(df[col].median())
 
 # Normalize the data using StandardScaler
 scaler = StandardScaler()
 normalized_data = scaler.fit_transform(df[numeric_cols])
 normalized_df = pd.DataFrame(normalized_data, columns=numeric_cols)
 
-# ----- Create and Save Boxplot of Normalized Data -----
-plt.figure(figsize=(10, 6))
+# ----- Create and save boxplot of normalized data -----
+plt.figure()
 normalized_df.boxplot()
 plt.title("Box Plot of Normalized Numeric Features")
 plt.ylabel("Standardized Value (z-score)")
@@ -48,8 +48,8 @@ print(f"Boxplot saved to: {boxplot_pdf_path}")
 pca = PCA(n_components=2)
 pca_scores = pca.fit_transform(normalized_data)
 
-# ----- Create and Save PCA Score Plot (PC1 vs. PC2) -----
-plt.figure(figsize=(8, 6))
+# ----- Create and save PCA score plot (PC1 vs. PC2) -----
+plt.figure()
 plt.scatter(pca_scores[:, 0], pca_scores[:, 1], alpha=0.7, edgecolor='k')
 plt.xlabel(f"PC1 ({pca.explained_variance_ratio_[0]*100:.1f}% var)")
 plt.ylabel(f"PC2 ({pca.explained_variance_ratio_[1]*100:.1f}% var)")
@@ -71,11 +71,11 @@ plt.savefig(score_pdf_path, format="pdf")
 plt.close()
 print(f"PCA score plot saved to: {score_pdf_path}")
 
-# ----- Create and Save PCA Loading Plot -----
-# loadings: (n_features, n_components)
-loadings = pca.components_.T
-plt.figure(figsize=(8, 6))
-plt.scatter(loadings[:, 0], loadings[:, 1], s=100, color='red')
+# ----- Create and save PCA loading plot -----
+loadings = pca.components_.T  # shape: (n_features, n_components)
+plt.figure()
+plt.scatter(loadings[:, 0], loadings[:, 1], alpha=0.7, edgecolor='k')
+
 for i, feature in enumerate(numeric_cols):
     plt.text(loadings[i, 0]*1.05, loadings[i, 1]*1.05, feature, fontsize=9)
 
@@ -84,14 +84,12 @@ plt.ylabel("PC2 loading")
 plt.title("PCA Loading Plot")
 plt.grid(True)
 
-# Set symmetrical axis limits for loading plot:
+# Set symmetrical axis limits (example provided)
 lx_min, lx_max = loadings[:, 0].min(), loadings[:, 0].max()
 ly_min, ly_max = loadings[:, 1].min(), loadings[:, 1].max()
-limit_lx = np.ceil(max(abs(lx_min), abs(lx_max)))
-limit_ly = np.ceil(max(abs(ly_min), abs(ly_max)))
-limit_loading = max(limit_lx, limit_ly)
-plt.xlim(-limit_loading, limit_loading)
-plt.ylim(-limit_loading, limit_loading)
+limit = np.ceil(max(abs(lx_min), abs(lx_max), abs(ly_min), abs(ly_max)))
+plt.xlim(-limit, limit)
+plt.ylim(-limit, limit)
 
 plt.tight_layout()
 plt.savefig(loading_pdf_path, format="pdf")

@@ -21,7 +21,7 @@ df = pd.read_csv(csv_path, na_values=['?'])
 print("Missing values per column before cleaning:")
 print(df.isnull().sum())
 
-# Identify numeric columns (exclude non-numeric e.g., 'Car_name')
+# Identify numeric columns (exclude non-numeric, e.g., 'Car_name')
 numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
 
 # Impute missing numeric data with the median value
@@ -49,6 +49,8 @@ print(f"Boxplot saved to: {boxplot_pdf_path}")
 pca = PCA(n_components=2)
 pca_scores = pca.fit_transform(normalized_data)
 
+# Determine symmetrical limits for score plot
+score_lim = np.max(np.abs(pca_scores))
 # ----- Create and Save PCA Score Plot (PC1 vs. PC2) -----
 plt.figure(figsize=(8, 6))
 plt.scatter(pca_scores[:, 0], pca_scores[:, 1], alpha=0.7, edgecolor='k')
@@ -56,6 +58,8 @@ plt.xlabel(f"PC1 ({pca.explained_variance_ratio_[0]*100:.1f}% var)")
 plt.ylabel(f"PC2 ({pca.explained_variance_ratio_[1]*100:.1f}% var)")
 plt.title("PCA Score Plot")
 plt.grid(True)
+plt.xlim(-score_lim, score_lim)
+plt.ylim(-score_lim, score_lim)
 plt.tight_layout()
 plt.savefig(score_pdf_path, format="pdf")
 plt.close()
@@ -63,6 +67,8 @@ print(f"PCA score plot saved to: {score_pdf_path}")
 
 # ----- Create and Save PCA Loading Plot -----
 loadings = pca.components_.T  # shape: (n_features, n_components)
+# Determine symmetrical limits for loading plot
+loading_lim = np.max(np.abs(loadings))
 plt.figure(figsize=(8, 6))
 plt.scatter(loadings[:, 0], loadings[:, 1], s=100, color='red')
 for i, feature in enumerate(numeric_cols):
@@ -71,6 +77,8 @@ plt.xlabel("PC1 loading")
 plt.ylabel("PC2 loading")
 plt.title("PCA Loading Plot")
 plt.grid(True)
+plt.xlim(-loading_lim, loading_lim)
+plt.ylim(-loading_lim, loading_lim)
 plt.tight_layout()
 plt.savefig(loading_pdf_path, format="pdf")
 plt.close()

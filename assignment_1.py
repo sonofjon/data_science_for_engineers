@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -21,7 +22,7 @@ df.hist(bins=30, figsize=(15, 10))
 plt.tight_layout()  # Adjust subplot spacing
 hist_output = os.path.join(work_dir, "histograms.pdf")
 plt.savefig(hist_output)
-plt.close()  # Close the histogram figure
+plt.close()  # Close the figure
 
 # 2. Create a scatter plot matrix (pairplot)
 pairplot_fig = sns.pairplot(df)
@@ -30,7 +31,11 @@ pairplot_fig.savefig(pairplot_output)
 plt.close()  # Close the pairplot figure
 
 # 3. Produce and Export a Correlation Heatmap
-corr_matrix = df.corr()  # Compute Pearson correlation coefficients
+
+# Select only numeric columns to avoid conversion errors.
+numeric_df = df.select_dtypes(include=[np.number])
+corr_matrix = numeric_df.corr()  # Compute Pearson correlation coefficients
+
 plt.figure(figsize=(10, 8))
 sns.heatmap(corr_matrix, annot=True, fmt=".2f", cmap="coolwarm", square=True)
 plt.title("Correlation Heatmap")
@@ -40,6 +45,6 @@ plt.savefig(corr_output)
 plt.close()  # Close the heatmap figure
 
 print("Plots saved as:")
-print(" - Histograms:    {}".format(hist_output))
-print(" - Pairplot:      {}".format(pairplot_output))
-print(" - Correlation Heatmap: {}".format(corr_output))
+print(" - Histograms:           {}".format(hist_output))
+print(" - Pairplot:             {}".format(pairplot_output))
+print(" - Correlation Heatmap:  {}".format(corr_output))

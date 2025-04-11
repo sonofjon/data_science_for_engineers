@@ -76,8 +76,13 @@ loadings = pca.components_.T  # shape: (n_features, n_components)
 plt.figure()
 plt.scatter(loadings[:, 0], loadings[:, 1], alpha=0.7, edgecolor='k')
 
+# Annotate plot markers
 for i, feature in enumerate(numeric_cols):
-    plt.text(loadings[i, 0]*1.05, loadings[i, 1]*1.05, feature, fontsize=9)
+    plt.annotate(feature,
+                 (loadings[i, 0], loadings[i, 1]),
+                 xytext=(5, 0),  # Offset 5 points to the right
+                 textcoords='offset points',
+                 ha='left', fontsize=9)
 
 plt.xlabel("PC1 loading")
 plt.ylabel("PC2 loading")

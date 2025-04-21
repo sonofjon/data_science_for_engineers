@@ -1,6 +1,7 @@
 ## Assignment 1
 
-Based on the histograms and scatter plot matrix, here are some interesting conclusions:
+Based on the histograms and scatter plot matrix, here are some interesting
+conclusions:
 
 1. Distribution: The histograms for miles per gallon (MPG) and weight show
    distribution that are skewed toward lower values.  Acceleration looks
@@ -18,22 +19,32 @@ Based on the histograms and scatter plot matrix, here are some interesting concl
 
 Based on the correlation heatmap plot:
 
-1. There is strong negative correlation between MPG and weight, displacement, and horsepower, as suggested by the initial analysis above.
+1. There is strong negative correlation between MPG and weight,
+   displacement, and horsepower, as suggested by the initial analysis above.
 
-2. There is strong positive correlation between weight, displacement, and horsepower, also as seen in earlier plots.
+2. There is strong positive correlation between weight, displacement, and
+   horsepower, also as seen in earlier plots.
 
-3. Model year is positive correlated (although weakly) with MPG, which makes sense.
+3. Model year is positive correlated (although weakly) with MPG, which makes
+   sense.
 
 # Question 2
 
-No, correlation does not imply causation. There may be other underlying factors influencing these variables.
+No, correlation does not imply causation. There may be other underlying
+factors influencing these variables.
 
 # Question 3
 
 There may be different types of variation in this data set, for example:
 
 1.  Natural variation:
-    *   This occurs due to inherent differences among the cars themselves (e.g., size, engine design, materials used).  Also, changes and improvements in automotive engineering over time can lead to changes in vehicle performance, for example enhanced fuel efficiency, as seen in Question 2 above.
+    *   This occurs due to inherent differences among the cars themselves
+        (e.g., size, engine design, materials used).  Also, changes and
+        improvements in automotive engineering over time can lead to changes
+        in vehicle performance, for example enhanced fuel efficiency, as
+        seen in Question 2 above.
 
 3.  Measurement variation:
-    *   There can be slight inaccuracies in how the original data was measured. This could involve rounding errors, measurement inconsistencies or imprecise methods.
+    *   There can be slight inaccuracies in how the original data was
+        measured. This could involve rounding errors, measurement
+        inconsistencies or imprecise methods.
